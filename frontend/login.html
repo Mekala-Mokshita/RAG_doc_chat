@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>GenAgent Login</title>
+
+<style>
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    background: linear-gradient(135deg,#111827,#1f2937);
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    margin:0;
+}
+
+.login-card{
+    background:white;
+    padding:40px;
+    border-radius:12px;
+    width:320px;
+    text-align:center;
+    box-shadow:0 10px 30px rgba(0,0,0,0.3);
+}
+
+h2{
+    margin-bottom:10px;
+}
+
+.subtitle{
+    color:#6b7280;
+    font-size:14px;
+    margin-bottom:25px;
+}
+
+input{
+    width:100%;
+    padding:10px;
+    margin:8px 0;
+    border-radius:6px;
+    border:1px solid #d1d5db;
+}
+
+button{
+    width:100%;
+    padding:10px;
+    margin-top:10px;
+    border:none;
+    border-radius:6px;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.login-btn{
+    background:#2563eb;
+}
+.login-btn:hover{
+    background:#1d4ed8;
+}
+
+.register-btn{
+    background:#10b981;
+}
+.register-btn:hover{
+    background:#059669;
+}
+
+#msg{
+    margin-top:15px;
+    font-size:14px;
+    color:#ef4444;
+}
+</style>
+</head>
+
+<body>
+
+<div class="login-card">
+
+    <h2>🤖 GenAgent</h2>
+    <div class="subtitle">Secure AI Document Assistant</div>
+
+    <input id="username" placeholder="Username">
+    <input id="password" type="password" placeholder="Password">
+
+    <button class="login-btn" onclick="login()">Login</button>
+    <button class="register-btn" onclick="register()">Register</button>
+
+    <p id="msg"></p>
+
+</div>
+
+<script>
+
+const API = "http://127.0.0.1:8000";
+const msg = document.getElementById("msg");
+
+/* ---------------- REGISTER ---------------- */
+
+async function register(){
+
+    let u = document.getElementById("username").value.trim();
+    let p = document.getElementById("password").value.trim();
+
+    if(!u || !p){
+        msg.innerText="Enter username & password";
+        return;
+    }
+
+    // IMPORTANT: send FORM DATA
+    const formData = new FormData();
+    formData.append("username", u);
+    formData.append("password", p);
+
+    const res = await fetch(`${API}/register`,{
+        method:"POST",
+        body:formData
+    });
+
+    const data = await res.json();
+
+    if(res.ok){
+        msg.style.color="green";
+        msg.innerText="Registered successfully! Now login.";
+    }else{
+        msg.style.color="red";
+        msg.innerText=data.detail;
+    }
+}
+
+/* ---------------- LOGIN ---------------- */
+
+async function login(){
+
+    let u = document.getElementById("username").value.trim();
+    let p = document.getElementById("password").value.trim();
+
+    const formData = new FormData();
+    formData.append("username", u);
+    formData.append("password", p);
+
+    const res = await fetch(`${API}/login`,{
+        method:"POST",
+        body:formData
+    });
+
+    const data = await res.json();
+
+    if(!res.ok){
+        msg.style.color="red";
+        msg.innerText=data.detail;
+        return;
+    }
+
+    // SAVE TOKEN
+    localStorage.setItem("token",data.access_token);
+
+    // GO TO CHAT PAGE
+    window.location.href="/chat";
+}
+
+</script>
+
+
+</body>
+</html>

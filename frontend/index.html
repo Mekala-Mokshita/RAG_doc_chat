@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>GenAgent</title>
+
+<link rel="stylesheet" href="/static/style.css">
+
+</head>
+
+<body>
+
+<!-- ================= HEADER ================= -->
+<header class="header">
+
+    <div class="header-left">
+        <h1>🤖 GenAgent</h1>
+        <p>AI Document Intelligence Assistant</p>
+    </div>
+
+    <div class="header-right">
+        <span id="userDisplay" class="user-name"></span>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+
+</header>
+
+
+<!-- ================= APP LAYOUT ================= -->
+<div class="app-layout">
+
+    <!-- ===== SIDEBAR ===== -->
+    <div class="sidebar">
+
+        <h3>💬 Chats</h3>
+
+        <button onclick="newChat()" class="new-chat-btn">
+            ➕ New Chat
+        </button>
+
+        <div id="historyList" class="history-list"></div>
+
+    </div>
+
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="main-content">
+
+        <!-- ===== UPLOAD ===== -->
+        <div class="upload-box" id="dropArea">
+
+            <h3>📄 Upload Document</h3>
+
+            <p class="upload-text">Drag & Drop PDF here</p>
+            <p class="upload-sub">or select manually</p>
+
+            <input type="file" id="pdfFile" accept="application/pdf">
+
+            <button id="uploadBtn">Upload PDF</button>
+
+            <p id="status" class="status-text">
+                Upload a PDF to start asking questions
+            </p>
+
+        </div>
+
+
+        <!-- ===== CHAT ===== -->
+        <div class="chat-container">
+
+            <div id="chatbox" class="chatbox">
+
+                <div class="bot">
+                    👋 Hello! I can understand your documents.<br>
+                    Please upload a PDF to begin.
+                </div>
+
+            </div>
+
+            <div class="input-area">
+
+                <input 
+                    type="text"
+                    id="question"
+                    placeholder="Ask a question from your document..."
+                    disabled
+                >
+
+                <button id="askBtn" disabled>
+                    Send
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ================= TOAST ================= -->
+<div id="toast"></div>
+
+
+<!-- ================= SCRIPTS ================= -->
+<script src="/static/script.js"></script>
+
+<script>
+/* ---------- USER TOKEN ---------- */
+
+try {
+    const token = localStorage.getItem("token");
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    document.getElementById("userDisplay").innerText = "👤 " + payload.sub;
+} catch {
+    localStorage.removeItem("token");
+    window.location.href="/";
+}
+</script>
+
+</body>
+</html>
