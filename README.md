@@ -1,4 +1,4 @@
-#  RAG Doc Chat
+##GenAgent
 
 AI-powered app to upload PDFs and ask questions using RAG.
 
